@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "controller.h"
+#include <QSqlQueryModel>
 #include <QComboBox>
 #include <QDebug>
 #include <QFormLayout>
@@ -14,6 +15,7 @@
 #include <QPluginLoader>
 #include <QPushButton>
 #include <QString>
+#include <QTableView>
 #include <QTime>
 #include <QWidget>
 
@@ -30,15 +32,20 @@ class MainWindow : public QMainWindow {
 
   QTabWidget *SetupTabView();
   QGroupBox *SetupDatabaseBox();
+  QGroupBox *SetupProductBox();
+
 
   QWidget *central;
   QTabWidget *tab_view;
 
   QGridLayout *main_layout;
   QGridLayout *database_layout;
+  QGridLayout *product_layout;
   QFormLayout *database_input_formlayout;
 
   QGroupBox *database_box;
+  QTableView *table_view;
+  QGroupBox *product_box;
 
   QLabel *hostname_label;
   QLabel *database_name_label;
@@ -50,15 +57,19 @@ class MainWindow : public QMainWindow {
   QLineEdit *database_name_edit;
   QLineEdit *username_edit;
   QLineEdit *password_edit;
+  QLineEdit *product_link_edit;
 
   QPushButton *load_database_button;
   QPushButton *load_table_button;
+  QPushButton *add_product_button;
 
   QComboBox *table_combobox;
 
   Controller *controller;
  private slots:
   void HandleLoadDatabase();
+  void HandleDatabaseTableLoad();
+  void HandleAddProductToDatabase();
 };
 
 #endif // MAINWINDOW_H

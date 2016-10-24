@@ -14,8 +14,11 @@ TEMPLATE = app
 SOURCES += main.cc\
            mainwindow.cc \
            controller.cc \
-           database.cc
+           database.cc \
+           amazonproductcrawler.cc
 
 HEADERS += mainwindow.h \
            controller.h \
-           database.h
+           database.h \
+           amazonproduct.h \
+           amazonproductcrawler.h

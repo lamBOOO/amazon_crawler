@@ -3,14 +3,13 @@
 Database::Database() {}
 
 bool Database::SetDatabase(QString _hostname,
-                   QString _database_name,
-                   QString _username,
-                   QString _password) {
+                           QString _database_name,
+                           QString _username,
+                           QString _password) {
   const QString kDriver = "QMYSQL";
   if (database.isDriverAvailable(kDriver)) {
-    if (!database.isOpen() && !database.isOpenError()) {
+    if (!database.isOpen() && !database.isOpenError())
       database = QSqlDatabase::addDatabase(kDriver);
-    }
     hostname      = _hostname;
     database_name = _database_name;
     username      = _username;
@@ -38,9 +37,41 @@ bool Database::LoadDatabase() {
   }
 }
 
+bool Database::AddProductToDatabase(QString _asin)
+{
+  if (database.isOpen()) {
+    QSqlQuery *query = new QSqlQuery();
+    query->prepare("INSERT INTO " + current_table + " (asin) VALUES (:asin);");
+    query->bindValue(":asin", _asin);
+    if (query->exec()) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+void Database::SetCurrentTable(QString _table)
+{
+  current_table = _table;
+}
+
+QSqlQueryModel *Database::GetTableModel(QString _table) {
+  QSqlQueryModel *model = new QSqlQueryModel();
+  QSqlQuery *query = new QSqlQuery();
+  query->prepare("SELECT * FROM " + _table);
+  query->exec();
+  model->setQuery(*query);
+  return model;
+}
+
 QList<QString> Database::GetTableNames() {
+  QString kInformationConstant = "information_schema.tables";
   QList<QString> table_names;
-  QString query_command = "SELECT table_name FROM information_schema.tables where table_schema='" + database_name + "';";
+  QString query_command = "SELECT table_name FROM " + kInformationConstant +
+                          " where table_schema='" + database_name + "';";
   QSqlQuery sql_query;
   sql_query.exec(query_command);
   qDebug() << sql_query.lastQuery();

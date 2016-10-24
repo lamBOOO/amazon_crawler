@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
   main_layout->addWidget(SetupDatabaseBox(), 0, 0);
   main_layout->addWidget(SetupTabView(), 0, 1);
+  main_layout->addWidget(SetupProductBox(), 0, 2);
+  main_layout->setColumnStretch(0, 0);
+  main_layout->setColumnStretch(1, 1);
 
   controller = new Controller();
 }
@@ -18,7 +21,9 @@ MainWindow::~MainWindow() {
 }
 
 QTabWidget *MainWindow::SetupTabView() {
+  table_view   = new QTableView();
   tab_view = new QTabWidget();
+  tab_view->addTab(table_view, "table");
   return tab_view;
 }
 
@@ -52,15 +57,33 @@ QGroupBox *MainWindow::SetupDatabaseBox() {
   database_input_formlayout->addRow(table_label, table_combobox);
 
   load_database_button = new QPushButton("load database");
-  connect(load_database_button, SIGNAL(clicked()), this, SLOT(HandleLoadDatabase()));
+  connect(load_database_button, SIGNAL(clicked()), this,
+          SLOT(HandleLoadDatabase()));
   load_table_button    = new QPushButton("load table");
   load_table_button->setDisabled(true);
+  connect(load_table_button, SIGNAL(clicked()), this,
+          SLOT(HandleDatabaseTableLoad()));
 
   database_layout->addLayout(database_input_formlayout, 0, 0);
   database_layout->addWidget(load_database_button, 1, 0);
   database_layout->addWidget(load_table_button, 2, 0);
 
   return database_box;
+}
+
+QGroupBox *MainWindow::SetupProductBox()
+{
+  product_box         = new QGroupBox("Product Management");
+  product_layout      = new QGridLayout(product_box);
+
+  product_link_edit   = new QLineEdit();
+  add_product_button  = new QPushButton("add product");
+  connect(add_product_button, SIGNAL(clicked()), this,
+          SLOT(HandleAddProductToDatabase()));
+  product_layout->addWidget(product_link_edit);
+  product_layout->addWidget(add_product_button);
+
+  return product_box;
 }
 
 void MainWindow::HandleLoadDatabase()
@@ -86,5 +109,20 @@ void MainWindow::HandleLoadDatabase()
   } else {
     load_table_button->setDisabled(true);
     table_combobox->setDisabled(true);
+  }
+}
+
+void MainWindow::HandleDatabaseTableLoad() {
+  table_view->setModel(controller->GetTableModel(table_combobox->
+                                                 currentText()));
+  controller->SetCurrentTable(table_combobox->currentText());
+}
+
+void MainWindow::HandleAddProductToDatabase()
+{
+  if (controller->AddProductToDatabase(product_link_edit->text())) {
+    product_link_edit->setText("worked");
+  } else {
+    product_link_edit->setText("failed");
   }
 }

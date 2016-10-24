@@ -5,10 +5,15 @@ Controller::Controller() {
 }
 
 void Controller::SetDatabase(QString _hostname,
-                           QString _database_name,
-                           QString _username,
-                           QString _password) {
+                             QString _database_name,
+                             QString _username,
+                             QString _password) {
   database->SetDatabase(_hostname, _database_name, _username, _password);
+}
+
+void Controller::SetCurrentTable(QString _table)
+{
+  database->SetCurrentTable(_table);
 }
 
 bool Controller::LoadDatabase()
@@ -18,6 +23,15 @@ bool Controller::LoadDatabase()
   } else {
     return false;
   }
+}
+
+bool Controller::AddProductToDatabase(QString _asin)
+{
+  return database->AddProductToDatabase(_asin);
+}
+
+QSqlQueryModel *Controller::GetTableModel(QString _table) {
+  return database->GetTableModel(_table);
 }
 
 QList<QString> Controller::GetTableNames()
