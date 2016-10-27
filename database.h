@@ -14,6 +14,7 @@ class Database {
   bool SetDatabase(QString, QString, QString, QString);
   bool LoadDatabase();
   bool AddProductToDatabase(QString);
+  bool DeleteProductFromDatabase(QString);
   void SetCurrentTable(QString);
   QSqlQueryModel *GetTableModel(QString /*table*/);
   QList<QString> GetTableNames();

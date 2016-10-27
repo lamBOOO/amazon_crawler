@@ -30,6 +30,16 @@ bool Controller::AddProductToDatabase(QString _asin)
   return database->AddProductToDatabase(_asin);
 }
 
+bool Controller::DeleteProductFromDatabase(QString _asin)
+{
+  return database->DeleteProductFromDatabase(_asin);
+}
+
+void Controller::StartCrawling()
+{
+
+}
+
 QSqlQueryModel *Controller::GetTableModel(QString _table) {
   return database->GetTableModel(_table);
 }

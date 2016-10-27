@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   main_layout->addWidget(SetupDatabaseBox(), 0, 0);
   main_layout->addWidget(SetupTabView(), 0, 1);
   main_layout->addWidget(SetupProductBox(), 0, 2);
+  main_layout->addWidget(SetupControlBox(), 0, 3);
   main_layout->setColumnStretch(0, 0);
   main_layout->setColumnStretch(1, 1);
 
@@ -23,7 +24,7 @@ MainWindow::~MainWindow() {
 QTabWidget *MainWindow::SetupTabView() {
   table_view   = new QTableView();
   tab_view = new QTabWidget();
-  tab_view->addTab(table_view, "table");
+  tab_view->addTab(table_view, "Table");
   return tab_view;
 }
 
@@ -73,17 +74,35 @@ QGroupBox *MainWindow::SetupDatabaseBox() {
 
 QGroupBox *MainWindow::SetupProductBox()
 {
-  product_box         = new QGroupBox("Product Management");
-  product_layout      = new QGridLayout(product_box);
+  product_box           = new QGroupBox("Product Management");
+  product_layout        = new QGridLayout(product_box);
 
-  product_link_edit   = new QLineEdit();
-  add_product_button  = new QPushButton("add product");
+  product_link_edit     = new QLineEdit();
+  add_product_button    = new QPushButton("add product");
   connect(add_product_button, SIGNAL(clicked()), this,
           SLOT(HandleAddProductToDatabase()));
+  delete_product_button = new QPushButton("delete product");
+  connect(delete_product_button, SIGNAL(clicked()), this,
+          SLOT(HandleDeleteProductFromDatabase()));
+
   product_layout->addWidget(product_link_edit);
   product_layout->addWidget(add_product_button);
+  product_layout->addWidget(delete_product_button);
 
   return product_box;
+}
+
+QGroupBox *MainWindow::SetupControlBox()
+{
+  control_box         = new QGroupBox("Control");
+  control_layout      = new QGridLayout(control_box);
+
+  crawl_button        = new QPushButton("start crawling");
+  connect(crawl_button, SIGNAL(clicked()), this, SLOT(HandleStartCrawling()));
+
+  control_layout->addWidget(crawl_button);
+
+  return control_box;
 }
 
 void MainWindow::HandleLoadDatabase()
@@ -125,4 +144,20 @@ void MainWindow::HandleAddProductToDatabase()
   } else {
     product_link_edit->setText("failed");
   }
+  HandleDatabaseTableLoad();
+}
+
+void MainWindow::HandleDeleteProductFromDatabase()
+{
+  if (controller->DeleteProductFromDatabase(product_link_edit->text())) {
+    product_link_edit->setText("worked");
+  } else {
+    product_link_edit->setText("failed");
+  }
+  HandleDatabaseTableLoad();
+}
+
+void MainWindow::HandleStartCrawling()
+{
+  controller->StartCrawling();
 }

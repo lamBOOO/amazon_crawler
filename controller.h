@@ -13,6 +13,8 @@ class Controller{
   void SetCurrentTable(QString);
   bool LoadDatabase();
   bool AddProductToDatabase(QString);
+  bool DeleteProductFromDatabase(QString);
+  void StartCrawling();
 
   QSqlQueryModel *GetTableModel (QString /*table*/);
   QList<QString> GetTableNames();

@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow {
   QTabWidget *SetupTabView();
   QGroupBox *SetupDatabaseBox();
   QGroupBox *SetupProductBox();
-
+  QGroupBox *SetupControlBox();
 
   QWidget *central;
   QTabWidget *tab_view;
@@ -42,10 +42,12 @@ class MainWindow : public QMainWindow {
   QGridLayout *database_layout;
   QGridLayout *product_layout;
   QFormLayout *database_input_formlayout;
+  QGridLayout *control_layout;
 
   QGroupBox *database_box;
   QTableView *table_view;
   QGroupBox *product_box;
+  QGroupBox *control_box;
 
   QLabel *hostname_label;
   QLabel *database_name_label;
@@ -62,6 +64,8 @@ class MainWindow : public QMainWindow {
   QPushButton *load_database_button;
   QPushButton *load_table_button;
   QPushButton *add_product_button;
+  QPushButton *delete_product_button;
+  QPushButton *crawl_button;
 
   QComboBox *table_combobox;
 
@@ -70,6 +74,8 @@ class MainWindow : public QMainWindow {
   void HandleLoadDatabase();
   void HandleDatabaseTableLoad();
   void HandleAddProductToDatabase();
+  void HandleDeleteProductFromDatabase();
+  void HandleStartCrawling();
 };
 
 #endif // MAINWINDOW_H

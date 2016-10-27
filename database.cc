@@ -39,11 +39,32 @@ bool Database::LoadDatabase() {
 
 bool Database::AddProductToDatabase(QString _asin)
 {
+  if (_asin.size()!=10) return false;
   if (database.isOpen()) {
     QSqlQuery *query = new QSqlQuery();
     query->prepare("INSERT INTO " + current_table + " (asin) VALUES (:asin);");
     query->bindValue(":asin", _asin);
     if (query->exec()) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+bool Database::DeleteProductFromDatabase(QString _asin)
+{
+  //if (_asin.size()!=10) return false;
+  if (database.isOpen()) {
+    QSqlQuery *query = new QSqlQuery();
+    query->prepare("DELETE FROM " + current_table + " WHERE asin = :asin");
+    query->bindValue(":asin", _asin);
+    if (query->exec()) {
+      query->prepare("SELECT * FROM " + current_table + " WHERE asin = :asin");
+      query->bindValue(":asin", _asin);
+      query->exec();
       return true;
     } else {
       return false;
