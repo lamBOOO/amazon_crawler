@@ -2,6 +2,7 @@
 
 Controller::Controller() {
   database = new Database();
+  crawler  = new AmazonProductCrawler();
 }
 
 void Controller::SetDatabase(QString _hostname,
@@ -27,7 +28,13 @@ bool Controller::LoadDatabase()
 
 bool Controller::AddProductToDatabase(QString _asin)
 {
-  return database->AddProductToDatabase(_asin);
+  bool worked = true;
+  while (_asin.indexOf(",")!=-1) {
+    QString prd = _asin.left(_asin.indexOf(","));
+    worked = database->AddProductToDatabase(prd) && worked;
+    _asin = _asin.right(_asin.length()-_asin.indexOf(",")-1);
+  }
+  return worked && database->AddProductToDatabase(_asin);
 }
 
 bool Controller::DeleteProductFromDatabase(QString _asin)
@@ -37,7 +44,25 @@ bool Controller::DeleteProductFromDatabase(QString _asin)
 
 void Controller::StartCrawling()
 {
+  crawler_is_active = true;
+  QStringList all_products = database->GetAllProducts();
+  int n = all_products.length();
+  for (int i=0; i<n; i++) {
+    if (!crawler_is_active) break;
+    AmazonProduct tmp = this->crawler->GetProductInfo(all_products.at(i));
+    if (database->UpdateProduct(tmp)) {
+      qDebug() << QString::number(i+1) + "/" + QString::number(n) + " ok: " +
+                                                  ": " + tmp.GetInfo();
+    } else {
+      qDebug() << QString::number(i+1) + "/" + QString::number(n) + " nok: " +
+                                                  ": " + tmp.GetInfo();
+    }
+  }
+}
 
+void Controller::StopCrawling()
+{
+  this->crawler_is_active = false;
 }
 
 QSqlQueryModel *Controller::GetTableModel(QString _table) {

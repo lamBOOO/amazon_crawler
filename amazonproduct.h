@@ -4,12 +4,20 @@
 #include <QString>
 #include <QWebEnginePage>
 
-struct AmazonProduct {
+class AmazonProduct {
+ public:
+  AmazonProduct(QString, QString, float, float);
+  float GetAmazonPrice();
+  float GetWhdPrice();
+  QString GetName();
+  QString GetInfo();
+  QString GetAsin();
+ private:
+  AmazonProduct();
   QString name;
   QString asin;
-  double amazon_price;
-  double warehousedeal_price;
-  double idealo_price;
+  float amazon_price;
+  float whd_price;
 };
 
 #endif // PRODUCT_H

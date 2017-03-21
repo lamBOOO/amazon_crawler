@@ -15,7 +15,8 @@ SOURCES += main.cc\
            mainwindow.cc \
            controller.cc \
            database.cc \
-           amazonproductcrawler.cc
+           amazonproductcrawler.cc \
+    amazonproduct.cc
 
 HEADERS += mainwindow.h \
            controller.h \

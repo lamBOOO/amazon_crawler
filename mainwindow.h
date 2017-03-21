@@ -65,7 +65,8 @@ class MainWindow : public QMainWindow {
   QPushButton *load_table_button;
   QPushButton *add_product_button;
   QPushButton *delete_product_button;
-  QPushButton *crawl_button;
+  QPushButton *crawl_button_start;
+  QPushButton *crawl_button_stop;
 
   QComboBox *table_combobox;
 
@@ -76,6 +77,7 @@ class MainWindow : public QMainWindow {
   void HandleAddProductToDatabase();
   void HandleDeleteProductFromDatabase();
   void HandleStartCrawling();
+  void HandleStopCrawling();
 };
 
 #endif // MAINWINDOW_H

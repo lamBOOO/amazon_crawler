@@ -76,8 +76,9 @@ QGroupBox *MainWindow::SetupProductBox()
 {
   product_box           = new QGroupBox("Product Management");
   product_layout        = new QGridLayout(product_box);
+  product_box->setEnabled(false);
 
-  product_link_edit     = new QLineEdit();
+  product_link_edit     = new QLineEdit("ASIN or ASIN-list (ABC,DEF,GHI,..)");
   add_product_button    = new QPushButton("add product");
   connect(add_product_button, SIGNAL(clicked()), this,
           SLOT(HandleAddProductToDatabase()));
@@ -96,11 +97,15 @@ QGroupBox *MainWindow::SetupControlBox()
 {
   control_box         = new QGroupBox("Control");
   control_layout      = new QGridLayout(control_box);
+  control_box->setEnabled(false);
 
-  crawl_button        = new QPushButton("start crawling");
-  connect(crawl_button, SIGNAL(clicked()), this, SLOT(HandleStartCrawling()));
+  crawl_button_start        = new QPushButton("start crawling");
+  connect(crawl_button_start, SIGNAL(clicked()), this, SLOT(HandleStartCrawling()));
+  crawl_button_stop         = new QPushButton("stop crawling");
+  connect(crawl_button_stop, SIGNAL(clicked()), this, SLOT(HandleStopCrawling()));
 
-  control_layout->addWidget(crawl_button);
+  control_layout->addWidget(crawl_button_start);
+  control_layout->addWidget(crawl_button_stop);
 
   return control_box;
 }
@@ -135,6 +140,8 @@ void MainWindow::HandleDatabaseTableLoad() {
   table_view->setModel(controller->GetTableModel(table_combobox->
                                                  currentText()));
   controller->SetCurrentTable(table_combobox->currentText());
+  control_box->setEnabled(true);
+  product_box->setEnabled(true);
 }
 
 void MainWindow::HandleAddProductToDatabase()
@@ -160,4 +167,11 @@ void MainWindow::HandleDeleteProductFromDatabase()
 void MainWindow::HandleStartCrawling()
 {
   controller->StartCrawling();
+  HandleDatabaseTableLoad();
+}
+
+void MainWindow::HandleStopCrawling()
+{
+  controller->StopCrawling();
+  HandleDatabaseTableLoad();
 }
